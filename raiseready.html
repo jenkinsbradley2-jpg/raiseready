@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaiseReady — Seed Round Capital Ventures</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a227;
+      --gold-light: #e8c97a;
+      --gold-dark: #9e7d1a;
+      --bg: #080810;
+      --surface: #0f0f1a;
+      --surface2: #161625;
+      --surface3: #1e1e30;
+      --border: #2a2a42;
+      --text: #f0efee;
+      --text-muted: #8888aa;
+      --text-dim: #555570;
+      --danger: #e05252;
+      --success: #4caf82;
+      --radius: 8px;
+      --radius-lg: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ─── HEADER ─────────────────────────────── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #0a0a12;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .logo-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.4px;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .score-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .score-badge .score-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* ─── SCREENS ─────────────────────────────── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ─── HERO ────────────────────────────────── */
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 24px 48px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(201,162,39,0.12);
+      border: 1px solid rgba(201,162,39,0.25);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text) 40%, var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* ─── PROGRESS ────────────────────────────── */
+    .progress-bar-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+    }
+
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      position: relative;
+    }
+
+    .progress-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .progress-step.done:not(:last-child)::after,
+    .progress-step.active:not(:last-child)::after {
+      background: linear-gradient(90deg, var(--gold), var(--border));
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface3);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.done .step-dot {
+      background: var(--gold-dark);
+      border-color: var(--gold);
+      color: #0a0a12;
+    }
+
+    .progress-step.active .step-dot {
+      background: var(--gold);
+      border-color: var(--gold-light);
+      color: #0a0a12;
+      box-shadow: 0 0 0 4px rgba(201,162,39,0.2);
+    }
+
+    .step-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .progress-step.active .step-label { color: var(--gold-light); }
+    .progress-step.done .step-label { color: var(--text-muted); }
+
+    /* ─── CARD / SECTIONS ─────────────────────── */
+    .section-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      margin-bottom: 20px;
+    }
+
+    .section-card + .section-card { margin-top: 20px; }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 -40px 28px;
+    }
+
+    /* ─── INPUT FIELDS ────────────────────────── */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .fields-grid .field-full { grid-column: 1 / -1; }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
+    }
+
+    label .req { color: var(--gold); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="url"]:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,162,39,0.15);
+    }
+
+    input.error, textarea.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(224,82,82,0.12);
+    }
+
+    .field-error {
+      font-size: 12px;
+      color: var(--danger);
+      display: none;
+    }
+
+    .field-error.visible { display: block; }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.6;
+    }
+
+    /* ─── SLIDERS ─────────────────────────────── */
+    .slider-question {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .slider-question:first-child { padding-top: 0; }
+    .slider-question:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .slider-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201,162,39,0.1);
+      border: 1px solid rgba(201,162,39,0.2);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .q-score {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+      min-width: 32px;
+      text-align: right;
+      line-height: 1;
+    }
+
+    .slider-labels {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .slider-label-neg {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .slider-label-pos {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .slider-track {
+      position: relative;
+      padding: 4px 0;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    .slider-bg {
+      position: relative;
+      height: 6px;
+      background: var(--surface3);
+      border-radius: 3px;
+      margin: 8px 0;
+    }
+
+    .slider-bg input[type="range"] {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+    }
+
+    .slider-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      border-radius: 3px;
+      pointer-events: none;
+      transition: width 0.05s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--gold), 0 2px 8px rgba(0,0,0,0.4);
+      cursor: grab;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.15);
+      box-shadow: 0 0 0 3px var(--gold), 0 0 16px rgba(201,162,39,0.4);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--gold);
+      cursor: grab;
+    }
+
+    .slider-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2px;
+    }
+
+    .slider-scale span {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* ─── SCORE METER ─────────────────────────── */
+    .score-meter-card {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      border: 1px solid rgba(201,162,39,0.25);
+      border-radius: var(--radius-lg);
+      padding: 28px 40px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .score-meter-left h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .score-meter-number {
+      font-size: 56px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+
+    .score-meter-number span {
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-dim);
+      letter-spacing: 0;
+    }
+
+    .score-band-label {
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .score-meter-bar-wrap {
+      flex: 1;
+    }
+
+    .score-meter-bar-bg {
+      height: 10px;
+      background: var(--surface3);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .score-meter-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #9e7d1a, var(--gold), var(--gold-light));
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+
+    .score-bands {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .score-bands span {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* ─── BUTTONS ─────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0a0a12;
+      box-shadow: 0 4px 20px rgba(201,162,39,0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow: 0 6px 28px rgba(201,162,39,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    .btn-lg {
+      font-size: 16px;
+      padding: 16px 36px;
+      border-radius: 10px;
+    }
+
+    .btn-full { width: 100%; }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    /* ─── RESULTS SCREEN ──────────────────────── */
+    .results-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .results-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(201,162,39,0.12);
+      border: 2px solid rgba(201,162,39,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 28px;
+    }
+
+    .results-wrap h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--text) 40%, var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .results-wrap .subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .score-result-card {
+      background: var(--surface);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-bottom: 24px;
+    }
+
+    .result-score-number {
+      font-size: 80px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -3px;
+    }
+
+    .result-score-out-of {
+      font-size: 28px;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    .result-band {
+      margin: 16px 0 8px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    .result-interpretation {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .result-bar-wrap {
+      margin: 24px 0 0;
+    }
+
+    .result-bar-bg {
+      height: 12px;
+      background: var(--surface3);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .result-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #9e7d1a, var(--gold), var(--gold-light));
+      border-radius: 6px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .result-breakdowns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .breakdown-item {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .breakdown-item.active {
+      border-color: var(--gold);
+      background: rgba(201,162,39,0.08);
+    }
+
+    .breakdown-item .bd-range {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 2px;
+    }
+
+    .breakdown-item.active .bd-range { color: var(--gold); }
+
+    .breakdown-item .bd-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .breakdown-item.active .bd-label { color: var(--gold-light); }
+
+    .advisor-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+
+    .advisor-card p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .advisor-card strong { color: var(--text); }
+
+    .warning-card {
+      background: rgba(224,82,82,0.08);
+      border: 1px solid rgba(224,82,82,0.25);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #e08080;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .warning-card.visible { display: block; }
+
+    /* ─── LOADING ─────────────────────────────── */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,16,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .loading-overlay.active { display: flex; }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ─── TOKEN GATE ─────────────────────────── */
+    .token-gate-wrap {
+      max-width: 480px;
+      margin: 80px auto;
+      padding: 0 24px;
+    }
+
+    .token-gate-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+    }
+
+    .token-gate-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .token-gate-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .token-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .token-input-row input {
+      flex: 1;
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    .token-error {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 8px;
+      display: none;
+    }
+
+    .token-error.visible { display: block; }
+
+    .token-note {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ─── FOOTER ──────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .site-footer a { color: var(--text-dim); text-decoration: none; }
+    .site-footer a:hover { color: var(--gold-light); }
+
+    /* ─── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 640px) {
+      .section-card { padding: 24px 20px; }
+      .section-divider { margin: 0 -20px 24px; }
+      .fields-grid { grid-template-columns: 1fr; }
+      .fields-grid .field-full { grid-column: 1; }
+      .score-meter-card { flex-direction: column; align-items: flex-start; }
+      .score-meter-bar-wrap { width: 100%; }
+      .slider-labels { grid-template-columns: 1fr; grid-template-rows: auto auto auto; gap: 6px; }
+      .slider-label-neg { text-align: left; order: 1; }
+      .slider-bg { order: 2; }
+      .slider-label-pos { order: 3; }
+      .result-breakdowns { grid-template-columns: repeat(2, 1fr); }
+      .btn-row { flex-direction: column; }
+      .btn-row .btn { width: 100%; }
+      .score-badge { display: none; }
+      .hero { padding: 40px 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ──────────────────────────────────── -->
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-mark">SR</div>
+    <div class="logo-text">
+      <span class="logo-name">Seed Round Capital</span>
+      <span class="logo-sub">Ventures</span>
+    </div>
+  </div>
+  <div class="score-badge" id="headerScoreBadge" style="display:none;">
+    <span style="font-size:12px;">Score</span>
+    <span class="score-val" id="headerScoreVal">50</span>
+    <span style="font-size:12px; color:var(--text-dim)">/ 100</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 0: TOKEN GATE
+════════════════════════════════════════════════ -->
+<div class="screen active" id="screenToken">
+  <div class="token-gate-wrap">
+    <div class="token-gate-card">
+      <h2>Enter Airtable API Token</h2>
+      <p>Paste your Airtable personal access token below to activate the app. It is stored in this browser tab only and cleared when you close it.</p>
+      <div class="token-input-row">
+        <input type="password" id="tokenInput" placeholder="pat…" autocomplete="off" spellcheck="false">
+        <button class="btn btn-primary" onclick="saveToken()">Unlock</button>
+      </div>
+      <div class="token-error" id="tokenError">Please enter a valid token (must start with "pat").</div>
+      <div class="token-note">This token is never sent anywhere except directly to api.airtable.com. It is not stored in localStorage or any file.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── LOADING OVERLAY ─────────────────────────── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p class="loading-text">Saving your assessment…</p>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 1: FORM
+════════════════════════════════════════════════ -->
+<div class="screen active" id="screenForm">
+
+  <div class="hero">
+    <div class="hero-eyebrow">
+      ✦ Investor Readiness Assessment
+    </div>
+    <h1>Are you<br>RaiseReady?</h1>
+    <p>Answer 10 questions about your business fundamentals. Receive an instant readiness score and connect with a Seed Round Capital advisor.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-steps" id="progressSteps">
+      <div class="progress-step active" data-step="1">
+        <div class="step-dot">1</div>
+        <span class="step-label">About You</span>
+      </div>
+      <div class="progress-step" data-step="2">
+        <div class="step-dot">2</div>
+        <span class="step-label">Scorecard</span>
+      </div>
+      <div class="progress-step" data-step="3">
+        <div class="step-dot">3</div>
+        <span class="step-label">Vision</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Intake -->
+  <div class="section-wrap" id="step1">
+    <div class="section-card">
+      <div class="section-title">About You &amp; Your Company</div>
+      <p class="section-desc">Tell us who you are before we dive into the assessment.</p>
+      <div class="section-divider"></div>
+
+      <div class="fields-grid">
+        <div class="field-group">
+          <label for="founderName">Founder Name<span class="req">*</span></label>
+          <input type="text" id="founderName" placeholder="Jane Smith" autocomplete="name">
+          <span class="field-error" id="founderNameErr">Please enter your full name.</span>
+        </div>
+        <div class="field-group">
+          <label for="email">Email Address<span class="req">*</span></label>
+          <input type="email" id="email" placeholder="jane@company.com" autocomplete="email">
+          <span class="field-error" id="emailErr">Please enter a valid email address.</span>
+        </div>
+        <div class="field-group">
+          <label for="companyName">Company Name<span class="req">*</span></label>
+          <input type="text" id="companyName" placeholder="Acme Inc." autocomplete="organization">
+          <span class="field-error" id="companyNameErr">Please enter your company name.</span>
+        </div>
+        <div class="field-group">
+          <label for="website">Company Website</label>
+          <input type="url" id="website" placeholder="https://company.com" autocomplete="url">
+        </div>
+      </div>
+
+      <div class="btn-row" style="justify-content:flex-end;">
+        <button class="btn btn-primary btn-lg" onclick="goToStep2()">
+          Start Assessment
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Scorecard -->
+  <div class="section-wrap" id="step2" style="display:none;">
+
+    <div class="score-meter-card" id="scoreMeterCard">
+      <div class="score-meter-left">
+        <h3>Running Score</h3>
+        <div class="score-meter-number">
+          <span id="runningScore">50</span><span> / 100</span>
+        </div>
+        <div class="score-band-label" id="runningBand">Developing</div>
+      </div>
+      <div class="score-meter-bar-wrap">
+        <div class="score-meter-bar-bg">
+          <div class="score-meter-bar-fill" id="runningBarFill" style="width:50%"></div>
+        </div>
+        <div class="score-bands">
+          <span>10</span>
+          <span>40</span>
+          <span>60</span>
+          <span>80</span>
+          <span>100</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="slidersCard">
+      <div class="section-title">Self-Assessment Scorecard</div>
+      <p class="section-desc">Rate each dimension from 1 (fully left) to 10 (fully right). Be honest — this is for your benefit.</p>
+      <div class="section-divider"></div>
+      <div id="slidersContainer"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep1()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary btn-lg" onclick="goToStep3()">
+        Continue to Vision
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Vision -->
+  <div class="section-wrap" id="step3" style="display:none;">
+
+    <div class="section-card">
+      <div class="section-title">Your Vision</div>
+      <p class="section-desc">Help us understand where you're headed and what you need to get there.</p>
+      <div class="section-divider"></div>
+
+      <div style="display:flex; flex-direction:column; gap:22px;">
+        <div class="field-group">
+          <label for="resourcesNeeded">What are the key new resources you need to take your company to the next level?<span class="req">*</span></label>
+          <textarea id="resourcesNeeded" placeholder="e.g. Capital for product development, senior sales leadership, enterprise customer introductions…" rows="5"></textarea>
+          <span class="field-error" id="resourcesNeededErr">Please answer this question.</span>
+        </div>
+        <div class="field-group">
+          <label for="goalsWithResources">What goals could your company achieve if it had all the resources it needed?<span class="req">*</span></label>
+          <textarea id="goalsWithResources" placeholder="e.g. Reach $5M ARR within 18 months, expand to 3 new markets, build a world-class go-to-market team…" rows="5"></textarea>
+          <span class="field-error" id="goalsWithResourcesErr">Please answer this question.</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goToStep2()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn btn-primary btn-lg" id="submitBtn" onclick="handleSubmit()">
+          Submit Assessment
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9m-4-4l5 4-5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /screenForm -->
+
+
+<!-- ════════════════════════════════════════════════
+     SCREEN 2: RESULTS
+════════════════════════════════════════════════ -->
+<div class="screen" id="screenResults">
+  <div class="results-wrap">
+
+    <div class="results-icon" id="resultsIcon">✦</div>
+    <h2 id="resultsHeadline">Your Results</h2>
+    <p class="subtitle" id="resultsSubtitle">Here's how you scored on the RaiseReady assessment.</p>
+
+    <div class="warning-card" id="warningCard">
+      ⚠ We were unable to save your submission. Please contact <a href="mailto:hello@seedroundcapital.com" style="color:inherit;text-decoration:underline;">hello@seedroundcapital.com</a> and we'll get it sorted.
+    </div>
+
+    <div class="score-result-card">
+      <div class="result-score-number">
+        <span id="resultScoreNum">50</span><span class="result-score-out-of"> / 100</span>
+      </div>
+      <div class="result-band" id="resultBand">Developing</div>
+      <div class="result-interpretation" id="resultInterpretation">Some fundamentals in place.</div>
+
+      <div class="result-bar-wrap">
+        <div class="result-bar-bg">
+          <div class="result-bar-fill" id="resultBarFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="result-breakdowns">
+        <div class="breakdown-item" data-min="10" data-max="40">
+          <div class="bd-range">10–40</div>
+          <div class="bd-label">Early Stage</div>
+        </div>
+        <div class="breakdown-item" data-min="41" data-max="60">
+          <div class="bd-range">41–60</div>
+          <div class="bd-label">Developing</div>
+        </div>
+        <div class="breakdown-item" data-min="61" data-max="80">
+          <div class="bd-range">61–80</div>
+          <div class="bd-label">Getting Ready</div>
+        </div>
+        <div class="breakdown-item" data-min="81" data-max="100">
+          <div class="bd-range">81–100</div>
+          <div class="bd-label">Raise Ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="advisor-card">
+      <p><strong>A Seed Round Capital advisor will be in touch to discuss your results.</strong><br>In the meantime, review the dimensions where you scored below 7 — these are the areas that investors will probe hardest.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ─── FOOTER ──────────────────────────────────── -->
+<footer class="site-footer">
+  <p>© 2025 Seed Round Capital Ventures · <a href="mailto:hello@seedroundcapital.com">hello@seedroundcapital.com</a></p>
+</footer>
+
+
+<script>
+// ════════════════════════════════════════════
+// CONFIGURATION
+// ════════════════════════════════════════════
+const BASE_ID    = 'appiVl7JuggYmBz6k';
+const TABLE_NAME = 'RaiseReady Submissions';
+
+function getToken() { return sessionStorage.getItem('rr_airtable_token'); }
+
+function saveToken() {
+  const val = document.getElementById('tokenInput').value.trim();
+  const errEl = document.getElementById('tokenError');
+  if (!val.startsWith('pat') || val.length < 10) {
+    errEl.classList.add('visible');
+    return;
+  }
+  errEl.classList.remove('visible');
+  sessionStorage.setItem('rr_airtable_token', val);
+  document.getElementById('screenToken').classList.remove('active');
+  document.getElementById('screenForm').classList.add('active');
+}
+
+// Allow Enter key on token input
+document.getElementById('tokenInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveToken();
+});
+
+// ════════════════════════════════════════════
+// QUESTIONS DATA
+// ════════════════════════════════════════════
+const QUESTIONS = [
+  {
+    neg: 'Our executive team is not healthy and aligned.',
+    pos: 'Our executive team is healthy and aligned.'
+  },
+  {
+    neg: 'We are not getting the predictable business results we want.',
+    pos: 'We are getting the predictable business results we want.'
+  },
+  {
+    neg: 'We do not have a set of tools and best practices that we use to run our business.',
+    pos: 'We have a set of tools and best practices that we use to run our business.'
+  },
+  {
+    neg: 'We are not following a proven method and framework for growing our business.',
+    pos: 'We are following a proven method and framework for growing our business.'
+  },
+  {
+    neg: 'We do not know which key metrics we need to track to monitor how we are doing, or we are not tracking and sharing weekly.',
+    pos: 'We know which key metrics we need to track to monitor how we are doing, and we are tracking and sharing weekly.'
+  },
+  {
+    neg: 'We do not have a clear strategy on how to differentiate ourselves in the market.',
+    pos: 'We have a clear strategy on how to differentiate ourselves in the market.'
+  },
+  {
+    neg: 'We do not have a clearly defined target customer segment, or know their core problems, or how they are solving them today.',
+    pos: 'We have a clearly defined target customer segment and know their core problems and how they are solving them today.'
+  },
+  {
+    neg: 'We have not validated our unique value proposition with customers, or they have not expressed interest in purchasing our solution.',
+    pos: 'We have validated our unique value proposition with customers, and they have expressed interest in purchasing our solution.'
+  },
+  {
+    neg: 'Reporting and analysis of customer feedback data is not as frequent and accurate as financial data.',
+    pos: 'Reporting and analysis of customer feedback data is as frequent and accurate as financial data.'
+  },
+  {
+    neg: 'We do not have a repeatable and measurable sales model or we are not getting the results we want.',
+    pos: 'We have a repeatable and measurable sales model and we are getting the results we want.'
+  }
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+const scores = new Array(10).fill(5);
+let currentStep = 1;
+
+// ════════════════════════════════════════════
+// BUILD SLIDERS
+// ════════════════════════════════════════════
+function buildSliders() {
+  const container = document.getElementById('slidersContainer');
+  container.innerHTML = '';
+
+  QUESTIONS.forEach((q, i) => {
+    const val = scores[i];
+    const pct = ((val - 1) / 9) * 100;
+
+    const div = document.createElement('div');
+    div.className = 'slider-question';
+    div.innerHTML = `
+      <div class="slider-header">
+        <div class="q-num">Q${i + 1}</div>
+        <div class="q-score" id="qscore${i}">${val}</div>
+      </div>
+      <div class="slider-labels">
+        <div class="slider-label-neg">${q.neg}</div>
+        <div class="slider-bg" style="width:100%; position:relative; height:6px; background:var(--surface3); border-radius:3px; margin:8px 0; grid-column:1/-1;">
+          <div class="slider-fill" id="sfill${i}" style="width:${pct}%"></div>
+          <input
+            type="range"
+            id="slider${i}"
+            min="1" max="10" value="${val}"
+            style="position:absolute;top:50%;transform:translateY(-50%);margin:0;width:100%;"
+            oninput="onSlider(${i}, this.value)"
+          >
+        </div>
+        <div class="slider-label-pos">${q.pos}</div>
+      </div>
+      <div class="slider-scale">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function onSlider(i, val) {
+  val = parseInt(val, 10);
+  scores[i] = val;
+  const pct = ((val - 1) / 9) * 100;
+  document.getElementById(`qscore${i}`).textContent = val;
+  document.getElementById(`sfill${i}`).style.width = pct + '%';
+  updateRunningScore();
+}
+
+function updateRunningScore() {
+  const total = scores.reduce((a, b) => a + b, 0);
+  const pct = ((total - 10) / 90) * 100;
+  const band = getScoreBand(total);
+
+  document.getElementById('runningScore').textContent = total;
+  document.getElementById('runningBand').textContent = band.label;
+  document.getElementById('runningBarFill').style.width = pct + '%';
+  document.getElementById('headerScoreVal').textContent = total;
+}
+
+// ════════════════════════════════════════════
+// SCORE BAND
+// ════════════════════════════════════════════
+function getScoreBand(score) {
+  if (score <= 40) return { label: 'Early Stage', desc: 'Significant work needed before raise — focus on your fundamentals first.', short: 'Early stage — significant work needed before raise' };
+  if (score <= 60) return { label: 'Developing', desc: 'Some fundamentals are in place. Identify and close the gaps before raising.', short: 'Developing — some fundamentals in place' };
+  if (score <= 80) return { label: 'Getting Ready', desc: 'Strong foundation with a few gaps to address — you\'re on the right track.', short: 'Getting ready — strong foundation, a few gaps to address' };
+  return { label: 'Raise Ready', desc: 'Well positioned for investment conversations. Let\'s talk.', short: 'Raise ready — well positioned for investment conversations' };
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION / VALIDATION
+// ════════════════════════════════════════════
+function setProgress(step) {
+  currentStep = step;
+  document.querySelectorAll('.progress-step').forEach(el => {
+    const s = parseInt(el.dataset.step, 10);
+    el.classList.remove('active', 'done');
+    if (s < step) el.classList.add('done');
+    if (s === step) el.classList.add('active');
+  });
+}
+
+function goToStep1() {
+  document.getElementById('step1').style.display = '';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('headerScoreBadge').style.display = 'none';
+  setProgress(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep2() {
+  // Validate step 1 fields if coming from step 1
+  if (currentStep === 1 && !validateStep1()) return;
+
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = '';
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('headerScoreBadge').style.display = 'flex';
+  setProgress(2);
+  updateRunningScore();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep3() {
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = '';
+  setProgress(3);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep1() {
+  let valid = true;
+
+  const founderName = document.getElementById('founderName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const companyName = document.getElementById('companyName').value.trim();
+
+  setFieldError('founderName', 'founderNameErr', !founderName);
+  if (!founderName) valid = false;
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  setFieldError('email', 'emailErr', !emailValid);
+  if (!emailValid) valid = false;
+
+  setFieldError('companyName', 'companyNameErr', !companyName);
+  if (!companyName) valid = false;
+
+  return valid;
+}
+
+function validateStep3() {
+  let valid = true;
+  const res = document.getElementById('resourcesNeeded').value.trim();
+  const goals = document.getElementById('goalsWithResources').value.trim();
+
+  setFieldError('resourcesNeeded', 'resourcesNeededErr', !res);
+  if (!res) valid = false;
+
+  setFieldError('goalsWithResources', 'goalsWithResourcesErr', !goals);
+  if (!goals) valid = false;
+
+  return valid;
+}
+
+function setFieldError(fieldId, errId, show) {
+  const field = document.getElementById(fieldId);
+  const err   = document.getElementById(errId);
+  if (show) {
+    field.classList.add('error');
+    err.classList.add('visible');
+  } else {
+    field.classList.remove('error');
+    err.classList.remove('visible');
+  }
+}
+
+// ════════════════════════════════════════════
+// AIRTABLE: ENSURE TABLE EXISTS
+// ════════════════════════════════════════════
+async function ensureTable() {
+  // Check if table already exists
+  let listResp;
+  try {
+    listResp = await fetch(`https://api.airtable.com/v0/meta/bases/${BASE_ID}/tables`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+  } catch (e) {
+    return; // Network issue — will fail at record creation
+  }
+
+  if (!listResp.ok) return;
+  const listData = await listResp.json();
+  const exists = listData.tables && listData.tables.some(t => t.name === TABLE_NAME);
+  if (exists) return;
+
+  // Create table
+  const fields = [
+    { name: 'Founder Name',       type: 'singleLineText' },
+    { name: 'Email',              type: 'email' },
+    { name: 'Company Name',       type: 'singleLineText' },
+    { name: 'Website',            type: 'url' },
+    { name: 'Q1 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q2 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q3 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q4 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q5 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q6 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q7 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q8 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q9 Score',           type: 'number',        options: { precision: 0 } },
+    { name: 'Q10 Score',          type: 'number',        options: { precision: 0 } },
+    { name: 'Total Score',        type: 'number',        options: { precision: 0 } },
+    { name: 'Score Band',         type: 'singleLineText' },
+    { name: 'Resources Needed',   type: 'multilineText' },
+    { name: 'Goals With Resources', type: 'multilineText' },
+    { name: 'Submission Date',    type: 'date',          options: { dateFormat: { name: 'iso' } } }
+  ];
+
+  try {
+    await fetch(`https://api.airtable.com/v0/meta/bases/${BASE_ID}/tables`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: TABLE_NAME, fields })
+    });
+  } catch (e) {
+    // Ignore — record creation will surface the real error
+  }
+}
+
+// ════════════════════════════════════════════
+// AIRTABLE: CREATE RECORD
+// ════════════════════════════════════════════
+async function createRecord(data) {
+  const fields = {
+    'Founder Name':         data.founderName,
+    'Email':                data.email,
+    'Company Name':         data.companyName,
+    'Q1 Score':             data.scores[0],
+    'Q2 Score':             data.scores[1],
+    'Q3 Score':             data.scores[2],
+    'Q4 Score':             data.scores[3],
+    'Q5 Score':             data.scores[4],
+    'Q6 Score':             data.scores[5],
+    'Q7 Score':             data.scores[6],
+    'Q8 Score':             data.scores[7],
+    'Q9 Score':             data.scores[8],
+    'Q10 Score':            data.scores[9],
+    'Total Score':          data.totalScore,
+    'Score Band':           data.scoreBand,
+    'Resources Needed':     data.resourcesNeeded,
+    'Goals With Resources': data.goalsWithResources,
+    'Submission Date':      new Date().toISOString().split('T')[0]
+  };
+
+  if (data.website) fields['Website'] = data.website;
+
+  const resp = await fetch(
+    `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fields })
+    }
+  );
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'Airtable save failed');
+  }
+
+  return await resp.json();
+}
+
+// ════════════════════════════════════════════
+// SUBMIT HANDLER
+// ════════════════════════════════════════════
+async function handleSubmit() {
+  if (!validateStep3()) return;
+
+  const data = {
+    founderName:      document.getElementById('founderName').value.trim(),
+    email:            document.getElementById('email').value.trim(),
+    companyName:      document.getElementById('companyName').value.trim(),
+    website:          document.getElementById('website').value.trim(),
+    scores:           [...scores],
+    totalScore:       scores.reduce((a, b) => a + b, 0),
+    resourcesNeeded:  document.getElementById('resourcesNeeded').value.trim(),
+    goalsWithResources: document.getElementById('goalsWithResources').value.trim()
+  };
+
+  const band = getScoreBand(data.totalScore);
+  data.scoreBand = band.short;
+
+  // Show loading
+  document.getElementById('loadingOverlay').classList.add('active');
+  document.getElementById('submitBtn').disabled = true;
+
+  let saveFailed = false;
+
+  try {
+    await ensureTable();
+    await createRecord(data);
+  } catch (e) {
+    console.error('Airtable error:', e);
+    saveFailed = true;
+  }
+
+  // Hide loading
+  document.getElementById('loadingOverlay').classList.remove('active');
+
+  // Show results
+  showResults(data, band, saveFailed);
+}
+
+// ════════════════════════════════════════════
+// SHOW RESULTS
+// ════════════════════════════════════════════
+function showResults(data, band, saveFailed) {
+  document.getElementById('screenForm').classList.remove('active');
+  document.getElementById('screenResults').classList.add('active');
+
+  document.getElementById('resultsHeadline').textContent =
+    band.label === 'Raise Ready' ? 'You\'re Raise Ready.' : `You're ${band.label}.`;
+
+  document.getElementById('resultsSubtitle').textContent =
+    `${data.founderName} · ${data.companyName}`;
+
+  document.getElementById('resultScoreNum').textContent = data.totalScore;
+  document.getElementById('resultBand').textContent = band.label;
+  document.getElementById('resultInterpretation').textContent = band.desc;
+
+  if (saveFailed) {
+    document.getElementById('warningCard').classList.add('visible');
+  }
+
+  // Animate bar
+  const pct = ((data.totalScore - 10) / 90) * 100;
+  setTimeout(() => {
+    document.getElementById('resultBarFill').style.width = pct + '%';
+  }, 100);
+
+  // Highlight active band
+  document.querySelectorAll('.breakdown-item').forEach(el => {
+    const min = parseInt(el.dataset.min, 10);
+    const max = parseInt(el.dataset.max, 10);
+    if (data.totalScore >= min && data.totalScore <= max) {
+      el.classList.add('active');
+    }
+  });
+
+  // Emoji based on band
+  const icons = { 'Early Stage': '🌱', 'Developing': '📈', 'Getting Ready': '🚀', 'Raise Ready': '✦' };
+  document.getElementById('resultsIcon').textContent = icons[band.label] || '✦';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+
+// If a token was already entered this session, skip the gate
+if (getToken()) {
+  document.getElementById('screenToken').classList.remove('active');
+  document.getElementById('screenForm').classList.add('active');
+}
+
+buildSliders();
+updateRunningScore();
+
+// Live validation clear on input
+['founderName', 'email', 'companyName'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    this.classList.remove('error');
+    document.getElementById(id + 'Err').classList.remove('visible');
+  });
+});
+
+['resourcesNeeded', 'goalsWithResources'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    this.classList.remove('error');
+    document.getElementById(id + 'Err').classList.remove('visible');
+  });
+});
+</script>
+</body>
+</html>
