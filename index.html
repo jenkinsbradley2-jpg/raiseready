@@ -378,18 +378,10 @@
     }
 
     .slider-labels {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 12px;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       margin-bottom: 6px;
-    }
-
-    .slider-label-neg {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.4;
-      text-align: right;
     }
 
     .slider-label-pos {
@@ -893,10 +885,7 @@
       .fields-grid .field-full { grid-column: 1; }
       .score-meter-card { flex-direction: column; align-items: flex-start; }
       .score-meter-bar-wrap { width: 100%; }
-      .slider-labels { grid-template-columns: 1fr; grid-template-rows: auto auto auto; gap: 6px; }
-      .slider-label-neg { text-align: left; order: 1; }
-      .slider-bg { order: 2; }
-      .slider-label-pos { order: 3; }
+      .slider-labels { gap: 6px; }
       .result-breakdowns { grid-template-columns: repeat(2, 1fr); }
       .btn-row { flex-direction: column; }
       .btn-row .btn { width: 100%; }
@@ -1255,8 +1244,7 @@ function buildSliders() {
         <div class="q-score" id="qscore${i}">${val}</div>
       </div>
       <div class="slider-labels">
-        <div class="slider-label-neg">${q.neg}</div>
-        <div class="slider-bg" style="width:100%; position:relative; height:6px; background:var(--surface3); border-radius:3px; margin:8px 0; grid-column:1/-1;">
+        <div class="slider-bg" style="width:100%; position:relative; height:6px; background:var(--surface3); border-radius:3px; margin:8px 0;">
           <div class="slider-fill" id="sfill${i}" style="width:${pct}%"></div>
           <input
             type="range"
