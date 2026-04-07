@@ -805,66 +805,6 @@
       font-weight: 500;
     }
 
-    /* ─── TOKEN GATE ─────────────────────────── */
-    .token-gate-wrap {
-      max-width: 480px;
-      margin: 80px auto;
-      padding: 0 24px;
-    }
-
-    .token-gate-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-    }
-
-    .token-gate-card h2 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.3px;
-    }
-
-    .token-gate-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .token-input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
-    .token-input-row input {
-      flex: 1;
-      font-family: 'Menlo', 'Consolas', monospace;
-      font-size: 13px;
-      letter-spacing: 0.2px;
-    }
-
-    .token-error {
-      font-size: 12px;
-      color: var(--danger);
-      margin-top: 8px;
-      display: none;
-    }
-
-    .token-error.visible { display: block; }
-
-    .token-note {
-      margin-top: 20px;
-      padding: 12px 16px;
-      background: var(--surface2);
-      border-radius: var(--radius);
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
     /* ─── FOOTER ──────────────────────────────── */
     .site-footer {
       border-top: 1px solid var(--border);
@@ -911,24 +851,6 @@
     <span style="font-size:12px; color:var(--text-dim)">/ 100</span>
   </div>
 </header>
-
-<!-- ════════════════════════════════════════════════
-     SCREEN 0: TOKEN GATE
-════════════════════════════════════════════════ -->
-<div class="screen active" id="screenToken">
-  <div class="token-gate-wrap">
-    <div class="token-gate-card">
-      <h2>Enter Airtable API Token</h2>
-      <p>Paste your Airtable personal access token below to activate the app. It is stored in this browser tab only and cleared when you close it.</p>
-      <div class="token-input-row">
-        <input type="password" id="tokenInput" placeholder="pat…" autocomplete="off" spellcheck="false">
-        <button class="btn btn-primary" onclick="saveToken()">Unlock</button>
-      </div>
-      <div class="token-error" id="tokenError">Please enter a valid token (must start with "pat").</div>
-      <div class="token-note">This token is never sent anywhere except directly to api.airtable.com. It is not stored in localStorage or any file.</div>
-    </div>
-  </div>
-</div>
 
 <!-- ─── LOADING OVERLAY ─────────────────────────── -->
 <div class="loading-overlay" id="loadingOverlay">
@@ -1150,28 +1072,6 @@
 // ════════════════════════════════════════════
 // CONFIGURATION
 // ════════════════════════════════════════════
-const BASE_ID    = 'appiVl7JuggYmBz6k';
-const TABLE_NAME = 'RaiseReady Submissions';
-
-function getToken() { return sessionStorage.getItem('rr_airtable_token'); }
-
-function saveToken() {
-  const val = document.getElementById('tokenInput').value.trim();
-  const errEl = document.getElementById('tokenError');
-  if (!val.startsWith('pat') || val.length < 10) {
-    errEl.classList.add('visible');
-    return;
-  }
-  errEl.classList.remove('visible');
-  sessionStorage.setItem('rr_airtable_token', val);
-  document.getElementById('screenToken').classList.remove('active');
-  document.getElementById('screenForm').classList.add('active');
-}
-
-// Allow Enter key on token input
-document.getElementById('tokenInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') saveToken();
-});
 
 // ════════════════════════════════════════════
 // QUESTIONS DATA
@@ -1385,122 +1285,19 @@ function setFieldError(fieldId, errId, show) {
 }
 
 // ════════════════════════════════════════════
-// AIRTABLE: ENSURE TABLE EXISTS
-// ════════════════════════════════════════════
-async function ensureTable() {
-  // Check if table already exists
-  let listResp;
-  try {
-    listResp = await fetch(`https://api.airtable.com/v0/meta/bases/${BASE_ID}/tables`, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
-  } catch (e) {
-    return; // Network issue — will fail at record creation
-  }
-
-  if (!listResp.ok) return;
-  const listData = await listResp.json();
-  const exists = listData.tables && listData.tables.some(t => t.name === TABLE_NAME);
-  if (exists) return;
-
-  // Create table
-  const fields = [
-    { name: 'Founder Name',       type: 'singleLineText' },
-    { name: 'Email',              type: 'email' },
-    { name: 'Company Name',       type: 'singleLineText' },
-    { name: 'Website',            type: 'url' },
-    { name: 'Q1 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q2 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q3 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q4 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q5 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q6 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q7 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q8 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q9 Score',           type: 'number',        options: { precision: 0 } },
-    { name: 'Q10 Score',          type: 'number',        options: { precision: 0 } },
-    { name: 'Total Score',        type: 'number',        options: { precision: 0 } },
-    { name: 'Score Band',         type: 'singleLineText' },
-    { name: 'Resources Needed',   type: 'multilineText' },
-    { name: 'Goals With Resources', type: 'multilineText' },
-    { name: 'Submission Date',    type: 'date',          options: { dateFormat: { name: 'iso' } } }
-  ];
-
-  try {
-    await fetch(`https://api.airtable.com/v0/meta/bases/${BASE_ID}/tables`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name: TABLE_NAME, fields })
-    });
-  } catch (e) {
-    // Ignore — record creation will surface the real error
-  }
-}
-
-// ════════════════════════════════════════════
-// AIRTABLE: CREATE RECORD
-// ════════════════════════════════════════════
-async function createRecord(data) {
-  const fields = {
-    'Founder Name':         data.founderName,
-    'Email':                data.email,
-    'Company Name':         data.companyName,
-    'Q1 Score':             data.scores[0],
-    'Q2 Score':             data.scores[1],
-    'Q3 Score':             data.scores[2],
-    'Q4 Score':             data.scores[3],
-    'Q5 Score':             data.scores[4],
-    'Q6 Score':             data.scores[5],
-    'Q7 Score':             data.scores[6],
-    'Q8 Score':             data.scores[7],
-    'Q9 Score':             data.scores[8],
-    'Q10 Score':            data.scores[9],
-    'Total Score':          data.totalScore,
-    'Score Band':           data.scoreBand,
-    'Resources Needed':     data.resourcesNeeded,
-    'Goals With Resources': data.goalsWithResources,
-    'Submission Date':      new Date().toISOString().split('T')[0]
-  };
-
-  if (data.website) fields['Website'] = data.website;
-
-  const resp = await fetch(
-    `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fields })
-    }
-  );
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || 'Airtable save failed');
-  }
-
-  return await resp.json();
-}
-
-// ════════════════════════════════════════════
 // SUBMIT HANDLER
 // ════════════════════════════════════════════
 async function handleSubmit() {
   if (!validateStep3()) return;
 
   const data = {
-    founderName:      document.getElementById('founderName').value.trim(),
-    email:            document.getElementById('email').value.trim(),
-    companyName:      document.getElementById('companyName').value.trim(),
-    website:          document.getElementById('website').value.trim(),
-    scores:           [...scores],
-    totalScore:       scores.reduce((a, b) => a + b, 0),
-    resourcesNeeded:  document.getElementById('resourcesNeeded').value.trim(),
+    founderName:        document.getElementById('founderName').value.trim(),
+    email:              document.getElementById('email').value.trim(),
+    companyName:        document.getElementById('companyName').value.trim(),
+    website:            document.getElementById('website').value.trim(),
+    scores:             [...scores],
+    totalScore:         scores.reduce((a, b) => a + b, 0),
+    resourcesNeeded:    document.getElementById('resourcesNeeded').value.trim(),
     goalsWithResources: document.getElementById('goalsWithResources').value.trim()
   };
 
@@ -1514,10 +1311,14 @@ async function handleSubmit() {
   let saveFailed = false;
 
   try {
-    await ensureTable();
-    await createRecord(data);
+    const resp = await fetch('/.netlify/functions/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!resp.ok) throw new Error('Function returned ' + resp.status);
   } catch (e) {
-    console.error('Airtable error:', e);
+    console.error('Submit error:', e);
     saveFailed = true;
   }
 
@@ -1574,12 +1375,6 @@ function showResults(data, band, saveFailed) {
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
-
-// If a token was already entered this session, skip the gate
-if (getToken()) {
-  document.getElementById('screenToken').classList.remove('active');
-  document.getElementById('screenForm').classList.add('active');
-}
 
 buildSliders();
 updateRunningScore();
